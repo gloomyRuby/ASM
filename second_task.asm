@@ -7,17 +7,21 @@ section .data
 
 section .text
 start:
-mult: 	GETCHAR			; read char in EAX
-	mov dx, ax		; DL = AL smth we've just read
-	mov ax, bx		; AX = BX move it for multiplication
-	mul byte [TEN]		; AL * 10 = AX
-	mov bx, ax		; BX = AX
-	add bx, dx		; BX += DL
- 	cmp eax, 0xffffffff	; if (EAX == -1)
-	je exit			; goto exit
-	jmp mult		; else goto mult
+mult: 		GETCHAR			; read char in EAX
+		sub eax, '0'		; EAX = EAX - '0'
+		cmp eax, 0		
+		jge is_digit		; if (EAX >= 0) goto is_digit 
+		jl exit			; if (EAX < 0) goto exit		
+is_digit:	cmp eax, 9		
+		jg exit			; if (EAX > 9) goto exit
+		mov edx, eax		; EDX = EAX smth we've just read
+		mov eax, ebx		; EAX = EBX move it for multiplication
+		mul byte [TEN]		; EAX * 10
+		mov ebx, eax		; EBX = EAX
+		add ebx, edx		; EBX += EDX
+		jmp mult		; if (EAX >= 0 && EAX <= 9) goto mult
 		
-exit: 	mov eax, ebx		; EAX = EBX
-
-	PUTCHAR 10
-	FINISH
+exit: 		mov eax, ebx		; EAX = EBX
+	
+		PUTCHAR 10
+		FINISH
