@@ -10,9 +10,8 @@ start:
 mult: 		GETCHAR			; read char in EAX
 		sub eax, '0'		; EAX = EAX - '0'
 		cmp eax, 0		
-		jge is_digit		; if (EAX >= 0) goto is_digit 
 		jl exit			; if (EAX < 0) goto exit		
-is_digit:	cmp eax, 9		
+		cmp eax, 9		
 		jg exit			; if (EAX > 9) goto exit
 		mov edx, eax		; EDX = EAX smth we've just read
 		mov eax, ebx		; EAX = EBX move it for multiplication
